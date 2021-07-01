@@ -20,21 +20,3 @@ RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.18.0.tar.gz 
     && ./configure --prefix=/usr/local \ 
     && make all \
     && make install
-
-ARG user=jenkins
-ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
-
-ENV HOME /home/${user}
-RUN groupadd -g ${gid} ${group}
-RUN useradd -c "Jenkins user" -d $HOME -u ${uid} -g ${gid} -m ${user}
-RUN echo '%jenkins ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-ENV TZ Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-RUN mkdir /git && chown ${user}:${group} /git
-
-USER ${user}
-WORKDIR /home/${user}
